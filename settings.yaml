@@ -1,0 +1,20 @@
+entertokens:
+    reddit_client_id: "" # string
+    reddit_client_secret: "" # string
+    reddit_user_agent: "" # string
+    tokens: "" # string
+    group_id:  # int
+dictionary:
+    'eldenring' : 'Eldenring'
+    'i am the senate': 'star_wars'
+    'hello there': 'star_wars'
+    'general kenobi': 'star_wars'
+    'hello there general kenobi': 'star_wars'
+    'boobs': 'GirlsOfUSA'
+    'おっぱい': 'NSFW_Japan'
+    'титюнцы': 'TinyTits'
+    '젖꼭지': 'NSFW_Korea'
+    'нучтоанимепацаны': 'pantsu'
+    'сиси': 'RussianBabes'
+    'jojo': 'JoJoMemes'
+    'tits_list' : ['RussianBabes', 'SexyButNotPorn',  'pantsu', 'WtSSTaDaMiT','OnOff', 'EroticButNotPorn', 'cosplaygirls']
