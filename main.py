@@ -12,10 +12,10 @@ from botmodules import *
 
 if not path.exists(filename + '/img/'):
     makedirs(filename + '/img/')
-if not path.exists(filename + '/log/'):
-    makedirs(filename + '/log/')
+if not path.exists(filename + '/data/'):
+    makedirs(filename + '/data/')
 
-with open(filename + '/log/log_bot.txt', "a") as f:
+with open(filename + '/data/log.txt', "a") as f:
     f.write(str(datetime.datetime.now()) + '\n')
 
 while True:
@@ -62,8 +62,8 @@ while True:
                                    *upload_photo(upload, reddit_photos(settings['dictionary'][search_list[-1]]), True,''))
                         tier(event.obj.peer_id,event.object.from_id, search_list[-1])
 
-                    elif event.type == VkBotEventType.MESSAGE_NEW and ('бушидо' in search_list ):
-                        bushdo(bot_api, event.obj.peer_id)
+                    elif event.type == VkBotEventType.MESSAGE_NEW and (search_list[-1] in settings['books']):
+                        books(bot_api, event.obj.peer_id, settings['books'][search_list[-1]])
 
                     elif event.type == VkBotEventType.MESSAGE_NEW and ('booba' in search_list):
                         send_photo(bot_api, event.obj.peer_id,
@@ -82,7 +82,7 @@ while True:
 
             except Exception as err:
                 print(err)
-                with open(filename + '/log/log_bot.txt', "a") as f:
+                with open(filename + '/data/log_bot.txt', "a") as f:
                     f.write(str(datetime.datetime.now())+' '+str(err) + '\n')
                 pass
 

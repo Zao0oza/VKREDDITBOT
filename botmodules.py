@@ -38,9 +38,9 @@ def vk_msg_send(vk, peer_id, text, attachment):
     )
 
 
-def bushdo(vk, peer_id):
+def books(vk, peer_id, bookname):
     print('bush')
-    string = random.choice(list(open(filename + '/log/bushido2.txt')))
+    string = random.choice(list(open(filename + '/data/' + bookname, encoding='utf-8')))
     vk_msg_send(vk, peer_id, string, False)
 
 
@@ -139,10 +139,10 @@ def save_photo(url, title):
 
 def write_to_cheklist(i):  # записывает рандомно генерированные номера в txt
     temp_ = tuple([i])
-    with open(filename + '/log/blacklist.txt', "a") as f:
+    with open(filename + '/data/blacklist.txt', "a") as f:
         f.write(str(temp_) + '\n')
 
 
 def tier(peer, id, search):
-    with open(filename + '/log/tier.txt', "a") as f:
+    with open(filename + '/data/tier.txt', "a") as f:
         f.write(str(peer) + ';' + str(id) + ';' + search + '\n')
