@@ -1,9 +1,3 @@
-entertokens:
-    reddit_client_id: "" # string
-    reddit_client_secret: "" # string
-    reddit_user_agent: "" # string
-    tokens: "" # string
-    group_id:  # int
 dictionary:
     'eldenring' : 'Eldenring'
     'i am the senate': 'star_wars'
@@ -18,3 +12,7 @@ dictionary:
     'сиси': 'RussianBabes'
     'jojo': 'JoJoMemes'
     'tits_list' : ['RussianBabes', 'SexyButNotPorn',  'pantsu', 'WtSSTaDaMiT','OnOff', 'EroticButNotPorn', 'cosplaygirls']
+    'tits' : ['RussianBabes', 'SexyButNotPorn',  'pantsu', 'WtSSTaDaMiT','OnOff', 'EroticButNotPorn', 'cosplaygirls']
+    'леха' : ['RussianBabes', 'SexyButNotPorn',  'pantsu', 'WtSSTaDaMiT','OnOff', 'EroticButNotPorn', 'cosplaygirls']
+    "лёха": ['RussianBabes', 'SexyButNotPorn',  'pantsu', 'WtSSTaDaMiT','OnOff', 'EroticButNotPorn', 'cosplaygirls']
+    'feed': ['RussianBabes', 'SexyButNotPorn',  'pantsu', 'WtSSTaDaMiT','OnOff', 'EroticButNotPorn', 'cosplaygirls''cats','kpopfap','GirlsinSchoolUniforms','tightdresses','bikinis','NSFWFunny','Pajamas','ModelsGoneMild']

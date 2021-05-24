@@ -21,10 +21,10 @@ with open(filename + '/log/log_bot.txt', "a") as f:
 while True:
     r = sr.Recognizer()
     bot_session = vk_api.VkApi(
-        token=settings['entertokens']['tokens'])
+        token=tokens['tokens'])
     bot_api = bot_session.get_api()
     upload = VkUpload(bot_session)
-    longpoll = VkBotLongPoll(bot_session, settings['entertokens']['group_id'])
+    longpoll = VkBotLongPoll(bot_session, tokens['group_id'])
     keyboard = VkKeyboard(one_time=False)
     keyboard.add_button(':tits', color=VkKeyboardColor.PRIMARY)
     keyboard.add_button(':бушидо', color=VkKeyboardColor.PRIMARY)
@@ -53,13 +53,13 @@ while True:
                         print('no')
 
                     if event.type == VkBotEventType.MESSAGE_NEW and (search_list[-1] in settings['dictionary']):
+                        if type(settings['dictionary'][search_list[-1]]) == list :
+                            rnd = random.choice(settings['dictionary'][search_list[-1]])
+                        else:
+                            rnd = settings['dictionary'][search_list[-1]]
+                        send_photo(bot_api, event.obj.peer_id, *upload_photo(upload, reddit_photos(str(rnd)), True, ''))
                         send_photo(bot_api, event.obj.peer_id,
                                    *upload_photo(upload, reddit_photos(settings['dictionary'][search_list[-1]]), True,''))
-                        tier(event.obj.peer_id,event.object.from_id, search_list[-1])
-
-                    elif event.type == VkBotEventType.MESSAGE_NEW and (search_list[-1] in ['tits', 'леха', "лёха"]):
-                        rnd = random.choice(settings['dictionary']['tits_list'])
-                        send_photo(bot_api, event.obj.peer_id, *upload_photo(upload, reddit_photos(str(rnd)), True,''))
                         tier(event.obj.peer_id,event.object.from_id, search_list[-1])
 
                     elif event.type == VkBotEventType.MESSAGE_NEW and ('бушидо' in search_list ):

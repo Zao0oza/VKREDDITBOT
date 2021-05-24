@@ -12,11 +12,13 @@ filename = getcwd()
 
 with open(filename+'/settings.yaml', encoding='utf-8') as f:
     settings = yaml.safe_load(f)
+with open(filename+'/tokens.yaml', encoding='utf-8') as f:
+    tokens = yaml.safe_load(f)
 
 reddit = praw.Reddit(
-    client_id=settings['entertokens']['reddit_client_id'],
-    client_secret=settings['entertokens']['reddit_client_secret'],
-    user_agent=settings['entertokens']['reddit_user_agent']
+    client_id=tokens['reddit_client_id'],
+    client_secret=tokens['reddit_client_secret'],
+    user_agent=tokens['reddit_user_agent']
 )
 
 keyboard = VkKeyboard(one_time=False)
@@ -82,6 +84,7 @@ def search_reddit(name):  # функция поиска на выходе спи
     while i != 0:
         for submission in reddit.subreddit("all").search(name, sort='top', limit=i,
                                                          params={'include_over_18': 'on'}):
+            print(1)
             if is_image(submission.url):
                 if blacklist(submission.url):
                     adress_list.append([submission.url, submission.title, submission.permalink])
@@ -91,8 +94,11 @@ def search_reddit(name):  # функция поиска на выходе спи
                     i += 10
             else:
                 i += 10
-        if adress_list is not None:
+        if adress_list is not None and adress_list != []:
+            print(adress_list)
             return adress_list
+        else:
+            return [['https://i.imgur.com/0uJilpc.jpg', '404', '404']]
 
 
 def upload_photo(upload,
