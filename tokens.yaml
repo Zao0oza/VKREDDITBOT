@@ -1,1 +1,6 @@
 
+reddit_client_id: "" # string
+reddit_client_secret: "" # string
+reddit_user_agent: "" # string
+tokens: "" # string
+group_id:  # int
