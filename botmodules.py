@@ -10,7 +10,7 @@ import yaml
 import praw
 filename = getcwd()
 
-with open(filename+'\settings.yaml', encoding='utf-8') as f:
+with open(filename+'/settings.yaml', encoding='utf-8') as f:
     settings = yaml.safe_load(f)
 
 reddit = praw.Reddit(
