@@ -21,8 +21,8 @@ keyboard.add_button(':Hello there', color=VkKeyboardColor.PRIMARY)
 
 
 parser = argparse.ArgumentParser(description='настройки рассылки')
-parser.add_argument('--msgtext', type=str, help='текст сообщения', default='Вечер в хату')
-parser.add_argument('--peer_id', type=str, help='id группы', default='2000000003')
+parser.add_argument('--msg', type=str, help='текст сообщения', default='Вечер в хату')
+parser.add_argument('--peer', type=str, help='id группы', default='2000000003')
 args = parser.parse_args()
 filename = getcwd()
 
@@ -34,12 +34,10 @@ if not path.exists(filename + '/log/'):
 with open(filename + '/log/log_bot.txt', "a") as f:
     f.write(str(datetime.datetime.now()) + '\n')
 
-peer_id=2000000001
-
 def main():
     rnd = random.choice(settings['dictionary']['feed'])
     print(rnd)
-    send_photo(bot_api, args.peer_id, *upload_photo(upload, reddit_photos(str(rnd)),True,args.msgtext))
+    send_photo(bot_api, args.peer, *upload_photo(upload, reddit_photos(str(rnd)), True, args.msg))
     print('send')
 
 if __name__ == '__main__':
