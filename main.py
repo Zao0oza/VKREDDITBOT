@@ -62,6 +62,8 @@ while True:
 
                     elif event.type == VkBotEventType.MESSAGE_NEW and (search_list[-1] in settings['books']):
                         books(bot_api, event.obj.peer_id, settings['books'][search_list[-1]])
+                    elif event.type == VkBotEventType.MESSAGE_NEW and (search_list[-1] =='detect'):
+                        detect_public_ip(bot_api, event.obj.peer_id)
 
                     elif event.type == VkBotEventType.MESSAGE_NEW and ('booba' in search_list):
                         send_photo(bot_api, event.obj.peer_id,

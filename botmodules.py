@@ -37,6 +37,21 @@ def vk_msg_send(vk, peer_id, text, attachment):
         message=text
     )
 
+import requests
+
+def detect_public_ip(vk, peer_id):
+    try:
+        # Use a get request for api.duckduckgo.com
+        raw = requests.get('https://api.duckduckgo.com/?q=ip&format=json')
+        # load the request as json, look for Answer.
+        # split on spaces, find the 5th index ( as it starts at 0 ), which is the IP address
+        answer = raw.json()["Answer"].split()[4]
+    # if there are any connection issues, error out
+    except Exception as e:
+        return vk_msg_send(vk, peer_id, 'Error: {0}'.format(e), False)
+    # otherwise, return answer
+    else:
+        vk_msg_send(vk, peer_id, answer, False)
 
 def books(vk, peer_id, bookname):
     print('bush')
