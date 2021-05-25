@@ -57,9 +57,7 @@ while True:
                             rnd = random.choice(settings['dictionary'][search_list[-1]])
                         else:
                             rnd = settings['dictionary'][search_list[-1]]
-                        send_photo(bot_api, event.obj.peer_id, *upload_photo(upload, reddit_photos(str(rnd)), True, ''))
-                        send_photo(bot_api, event.obj.peer_id,
-                                   *upload_photo(upload, reddit_photos(settings['dictionary'][search_list[-1]]), True,''))
+                        send_photo(bot_api, event.obj.peer_id, *upload_photo(upload, reddit_photos(rnd), True, ''))
                         tier(event.obj.peer_id,event.object.from_id, search_list[-1])
 
                     elif event.type == VkBotEventType.MESSAGE_NEW and (search_list[-1] in settings['books']):
