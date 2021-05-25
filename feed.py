@@ -28,10 +28,10 @@ filename = getcwd()
 
 if not path.exists(filename + '/img/'):
     makedirs(filename + '/img/')
-if not path.exists(filename + '/log/'):
-    makedirs(filename + '/log/')
+if not path.exists(filename + 'data/log/'):
+    makedirs(filename + 'data/log/')
 
-with open(filename + '/log/log_bot.txt', "a") as f:
+with open(filename + '/data/log_bot.txt', "a") as f:
     f.write(str(datetime.datetime.now()) + '\n')
 
 def main():
