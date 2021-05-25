@@ -36,7 +36,6 @@ with open(filename + '/data/log_bot.txt', "a") as f:
 
 def main():
     rnd = random.choice(settings['dictionary']['feed'])
-    print(rnd)
     send_photo(bot_api, args.peer, *upload_photo(upload, reddit_photos(str(rnd)), True, args.msg))
     print('send')
 
