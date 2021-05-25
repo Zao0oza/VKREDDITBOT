@@ -52,7 +52,7 @@ def is_image(url):  # проверяет является ли ссылка из
 
 def blacklist(url):  # проверяет была ли уже такая ссылка
     try:
-        url_list = list(open(filename + '/log/blacklist.txt'))
+        url_list = list(open(filename + '/data/blacklist.txt'))
     except:
         url_list = ['']
     if url[9:] not in str(url_list):
