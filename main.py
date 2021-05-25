@@ -15,8 +15,19 @@ if not path.exists(filename + '/img/'):
 if not path.exists(filename + '/data/'):
     makedirs(filename + '/data/')
 
-with open(filename + '/data/log.txt', "a") as f:
-    f.write(str(datetime.datetime.now()) + '\n')
+try:
+    sqlite_connection = sqlite3.connect('data/data.db')
+    cursor = sqlite_connection.cursor()
+    cursor.execute( '''CREATE TABLE blacklist (
+                                name TEXT 
+                                );''')
+except Exception as err:
+    print(err)
+    with open(filename + '/data/log_bot.txt', "a") as f:
+        f.write(str(datetime.datetime.now()) + ' ' + str(err) + '\n')
+    pass
+    with open(filename + '/data/log.txt', "a") as f:
+        f.write(str(datetime.datetime.now()) + '\n')
 
 while True:
     r = sr.Recognizer()

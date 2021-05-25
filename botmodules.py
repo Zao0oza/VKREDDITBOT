@@ -4,7 +4,7 @@ import re
 from os import getcwd
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 import random
-import requests
+import sqlite3
 from io import BytesIO
 import yaml
 import praw
@@ -67,7 +67,7 @@ def is_image(url):  # проверяет является ли ссылка из
 
 def blacklist(url):  # проверяет была ли уже такая ссылка
     try:
-        url_list = list(open(filename + '/data/blacklist.txt'))
+        url_list = load_database()
     except:
         url_list = ['']
     if url[9:] not in str(url_list):
@@ -81,6 +81,7 @@ def reddit_photos(subreddit_name):  # получаем список с  пост
     i = 10
     while i != 0:
         for submission in reddit.subreddit(subreddit_name).hot(limit=i):
+            print(submission.url)
             if is_image(submission.url):
                 if blacklist(submission.url):
                     adress_list.append([submission.url, submission.title, submission.permalink])
@@ -154,8 +155,18 @@ def save_photo(url, title):
 
 def write_to_cheklist(i):  # записывает рандомно генерированные номера в txt
     temp_ = tuple([i])
-    with open(filename + '/data/blacklist.txt', "a") as f:
-        f.write(str(temp_) + '\n')
+    conn = sqlite3.connect(filename + "/data/data.db")  # или :memory: чтобы сохранить в RAM
+    cursor = conn.cursor()
+    cursor.execute('INSERT INTO blacklist VALUES (?)', temp_)
+    conn.commit()
+
+
+def load_database():
+    conn = sqlite3.connect(filename + "/data/data.db")  # или :memory: чтобы сохранить в RAM
+    cursor = conn.cursor()
+    sql = "SELECT * FROM blacklist"
+    cursor.execute(sql)
+    return cursor.fetchall()
 
 
 def tier(peer, id, search):
