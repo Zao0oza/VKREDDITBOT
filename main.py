@@ -19,6 +19,7 @@ try:
     sqlite_connection = sqlite3.connect('data/data.db')
     cursor = sqlite_connection.cursor()
     cursor.execute( '''CREATE TABLE blacklist (
+                                id INT, 
                                 name TEXT 
                                 );''')
 except Exception as err:
@@ -68,7 +69,7 @@ while True:
                             rnd = random.choice(settings['dictionary'][search_list[-1]])
                         else:
                             rnd = settings['dictionary'][search_list[-1]]
-                        send_photo(bot_api, event.obj.peer_id, *upload_photo(upload, reddit_photos(rnd), True, ''))
+                        send_photo(bot_api, event.obj.peer_id, *upload_photo(upload, reddit_photos(rnd, event.obj.peer_id), True, ''))
                         tier(event.obj.peer_id,event.object.from_id, search_list[-1])
 
                     elif event.type == VkBotEventType.MESSAGE_NEW and (search_list[-1] in settings['books']):

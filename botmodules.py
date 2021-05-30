@@ -65,25 +65,24 @@ def is_image(url):  # проверяет является ли ссылка из
             return True
 
 
-def blacklist(url):  # проверяет была ли уже такая ссылка
-    try:
-        url_list = load_database()
-    except:
-        url_list = ['']
+def blacklist(url,peer_id):  # проверяет была ли уже такая ссылка
+  
+    url_list = load_database(peer_id)
+    
     if url[9:] not in str(url_list):
         return True
     else:
         return False
 
 
-def reddit_photos(subreddit_name):  # получаем список с  постами сообщества
+def reddit_photos(subreddit_name,peer_id):  # получаем список с  постами сообщества
     adress_list = []
     i = 10
     while i != 0:
         for submission in reddit.subreddit(subreddit_name).hot(limit=i):
             print(submission.url)
             if is_image(submission.url):
-                if blacklist(submission.url):
+                if blacklist(submission.url,peer_id):
                     adress_list.append([submission.url, submission.title, submission.permalink])
                     i = 0
                     break
@@ -100,7 +99,6 @@ def search_reddit(name):  # функция поиска на выходе спи
     while i != 0:
         for submission in reddit.subreddit("all").search(name, sort='top', limit=i,
                                                          params={'include_over_18': 'on'}):
-            print(1)
             if is_image(submission.url):
                 if blacklist(submission.url):
                     adress_list.append([submission.url, submission.title, submission.permalink])
@@ -122,7 +120,6 @@ def upload_photo(upload,
                  save,msgtext):  # загружает фото в оперативную память (адрес и название берется рандомно из списка)
 
     url, title, link = adress_list[0]
-    write_to_cheklist(url[9:])
     img = requests.get(url).content
     f = BytesIO(img)
     try:
@@ -137,7 +134,9 @@ def upload_photo(upload,
     return owner_id, photo_id, access_key, title, url, link, save, msgtext
 
 
-def send_photo(vk, peer_id, owner_id, photo_id, access_key, title, url, link, save,msgtext):  # отправляет фото  в вк
+def send_photo(vk, peer_id, owner_id, photo_id, access_key, title, url, link, save,msgtext):
+    write_to_cheklist(url[9:],peer_id)
+  # отправляет фото  в вк
     attachment = f'photo{owner_id}_{photo_id}_{access_key}'
     text =msgtext+'\n' + str(title) + '\n' + 'https://www.reddit.com/' + str(link)
     vk_msg_send(vk, peer_id, text, attachment)
@@ -153,20 +152,23 @@ def save_photo(url, title):
     out.close()
 
 
-def write_to_cheklist(i):  # записывает рандомно генерированные номера в txt
-    temp_ = tuple([i])
+def write_to_cheklist(image, peer_id):  # записывает рандомно генерированные номера в txt
+    temp_ = tuple([image])
     conn = sqlite3.connect(filename + "/data/data.db")  # или :memory: чтобы сохранить в RAM
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO blacklist VALUES (?)', temp_)
+    cursor.execute('INSERT INTO blacklist (id,name) VALUES (?, ?)', (peer_id, image)) 
     conn.commit()
 
 
-def load_database():
+def load_database(peer_id):
+    
     conn = sqlite3.connect(filename + "/data/data.db")  # или :memory: чтобы сохранить в RAM
     cursor = conn.cursor()
-    sql = "SELECT * FROM blacklist"
+    sql = "SELECT name FROM blacklist where id ='%s'"% peer_id
     cursor.execute(sql)
-    return cursor.fetchall()
+    ("black")
+    c=cursor.fetchall()
+    return c
 
 
 def tier(peer, id, search):
