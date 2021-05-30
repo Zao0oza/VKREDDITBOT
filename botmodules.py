@@ -97,8 +97,7 @@ def search_reddit(name):  # функция поиска на выходе спи
     adress_list = []
     i = 10
     while i != 0:
-        for submission in reddit.subreddit("all").search(name, sort='top', limit=i,
-                                                         params={'include_over_18': 'on'}):
+        for submission in reddit.subreddit("all").search(name, sort='top', limit=i,  params={'include_over_18': 'on'}):
             if is_image(submission.url):
                 if blacklist(submission.url):
                     adress_list.append([submission.url, submission.title, submission.permalink])
@@ -153,20 +152,18 @@ def save_photo(url, title):
 
 
 def write_to_cheklist(image, peer_id):  # записывает рандомно генерированные номера в txt
-    temp_ = tuple([image])
     conn = sqlite3.connect(filename + "/data/data.db")  # или :memory: чтобы сохранить в RAM
     cursor = conn.cursor()
     cursor.execute('INSERT INTO blacklist (id,name) VALUES (?, ?)', (peer_id, image)) 
     conn.commit()
 
 
-def load_database(peer_id):
+def load_database (peer_id):
     
     conn = sqlite3.connect(filename + "/data/data.db")  # или :memory: чтобы сохранить в RAM
     cursor = conn.cursor()
     sql = "SELECT name FROM blacklist where id ='%s'"% peer_id
     cursor.execute(sql)
-    ("black")
     c=cursor.fetchall()
     return c
 
