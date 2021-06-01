@@ -27,8 +27,9 @@ except Exception as err:
     with open(filename + '/data/log_bot.txt', "a") as f:
         f.write(str(datetime.datetime.now()) + ' ' + str(err) + '\n')
     pass
-    with open(filename + '/data/log.txt', "a") as f:
-        f.write(str(datetime.datetime.now()) + '\n')
+  
+with open(filename + '/data/log.txt', "a") as f:
+    f.write(str(datetime.datetime.now()) + '\n')
 
 while True:
     r = sr.Recognizer()
