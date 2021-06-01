@@ -1,9 +1,5 @@
-import requests
-import time
 import datetime
-import time
 from apscheduler.schedulers.background import BackgroundScheduler
-from os import path, makedirs
 from botmodules import *
 
 try:
@@ -23,8 +19,9 @@ except Exception as err:
     with open(filename + '/data/log.txt', "a") as f:
         f.write(str(datetime.datetime.now()) + '\n')
 
+
 def status_check():
-  r=requests.get("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=4E3BDEA65FDF5D811DA6C9C383356A96&steamids=76561197960435530").json()
+  r=requests.get(("http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=%s&steamids=76561198085853697") % tokens['steam_id']).json()
   print(r["response"]["players"])
 
 

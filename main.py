@@ -50,7 +50,7 @@ while True:
                 for event in longpoll.listen():  # регистрируем событие
                     print("got event")
                     print(event.obj.peer_id)
-                    search_list = event.object['text'].lower().split(':')
+                    search_list = event.object['text'].lower()
 
                     try:
                         if event.object['attachments'][0]['type'] == 'audio_message':
@@ -83,14 +83,15 @@ while True:
                                    *upload_photo(upload, search_reddit('Italian Girl' + ' nsfw:1'), True,''))
                         tier(event.obj.peer_id,event.object.from_id, search_list[-1])
 
-                    elif event.type == VkBotEventType.MESSAGE_NEW and 'search' in search_list:
+                    elif event.type == VkBotEventType.MESSAGE_NEW and 'search18' in search_list:
+                        print(search_list[9:])
                         send_photo(bot_api, event.obj.peer_id,
-                                   *upload_photo(upload, search_reddit(search_list[1] + ' nsfw:0'), True,''))
+                                   *upload_photo(upload, search_reddit(search_list[9:] + ' nsfw:1'), True,''))
                         tier(event.obj.peer_id,event.object.from_id, search_list[-1])
 
-                    elif event.type == VkBotEventType.MESSAGE_NEW and 'search18' in search_list:
+                    elif event.type == VkBotEventType.MESSAGE_NEW and 'search' in search_list:
                         send_photo(bot_api, event.obj.peer_id,
-                                   *upload_photo(upload, search_reddit(search_list[1] + ' nsfw:1'), True,''))
+                                   *upload_photo(upload, search_reddit(search_list[7:] + ' nsfw:0'), True,''))
                         tier(event.obj.peer_id,event.object.from_id, search_list[-1])
 
             except Exception as err:
