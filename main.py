@@ -1,10 +1,6 @@
 #!/usr/bin/env python3
 
 from pydub import AudioSegment
-from os import path, makedirs
-import vk_api
-from vk_api import VkUpload
-from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import datetime
 import speech_recognition as sr
 
@@ -33,16 +29,7 @@ with open(filename + '/data/log.txt', "a") as f:
 
 while True:
     r = sr.Recognizer()
-    bot_session = vk_api.VkApi(
-        token=tokens['tokens'])
-    bot_api = bot_session.get_api()
-    upload = VkUpload(bot_session)
-    longpoll = VkBotLongPoll(bot_session, tokens['group_id'])
-    keyboard = VkKeyboard(one_time=False)
-    keyboard.add_button(':tits', color=VkKeyboardColor.PRIMARY)
-    keyboard.add_button(':бушидо', color=VkKeyboardColor.PRIMARY)
-    keyboard.add_button(':сиси', color=VkKeyboardColor.PRIMARY)
-    keyboard.add_button(':Hello there', color=VkKeyboardColor.PRIMARY)
+
 
     try:
         def main():
@@ -50,7 +37,7 @@ while True:
                 for event in longpoll.listen():  # регистрируем событие
                     print("got event")
                     print(event.obj.peer_id)
-                    search_list = event.object['text'].lower()
+                    search_list = event.object['text'].lower().split(':')
 
                     try:
                         if event.object['attachments'][0]['type'] == 'audio_message':
@@ -65,7 +52,10 @@ while True:
                     except:
                         print('no')
 
+
+
                     if event.type == VkBotEventType.MESSAGE_NEW and (search_list[-1] in settings['dictionary']):
+
                         if type(settings['dictionary'][search_list[-1]]) == list :
                             rnd = random.choice(settings['dictionary'][search_list[-1]])
                         else:

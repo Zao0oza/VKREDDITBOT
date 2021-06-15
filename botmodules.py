@@ -8,6 +8,10 @@ import sqlite3
 from io import BytesIO
 import yaml
 import praw
+import vk_api
+from os import path, makedirs
+from vk_api import VkUpload
+from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 filename = getcwd()
 
 with open(filename+'/settings.yaml', encoding='utf-8') as f:
@@ -20,7 +24,11 @@ reddit = praw.Reddit(
     client_secret=tokens['reddit_client_secret'],
     user_agent=tokens['reddit_user_agent']
 )
-
+bot_session = vk_api.VkApi(
+    token=tokens['tokens'])
+bot_api = bot_session.get_api()
+upload = VkUpload(bot_session)
+longpoll = VkBotLongPoll(bot_session, tokens['group_id'])
 keyboard = VkKeyboard(one_time=False)
 keyboard.add_button(':tits', color=VkKeyboardColor.PRIMARY)
 keyboard.add_button(':бушидо', color=VkKeyboardColor.PRIMARY)
