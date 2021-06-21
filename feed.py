@@ -1,6 +1,5 @@
 from os import path, makedirs
 from botmodules import *
-import datetime
 
 import argparse
 

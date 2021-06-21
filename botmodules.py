@@ -9,11 +9,12 @@ from io import BytesIO
 import yaml
 import praw
 import vk_api
+import requests
 from os import path, makedirs
 from vk_api import VkUpload
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 filename = getcwd()
-
+import datetime
 with open(filename+'/settings.yaml', encoding='utf-8') as f:
     settings = yaml.safe_load(f)
 with open(filename+'/tokens.yaml', encoding='utf-8') as f:
@@ -36,6 +37,20 @@ keyboard.add_button(':сиси', color=VkKeyboardColor.PRIMARY)
 keyboard.add_button(':Hello there', color=VkKeyboardColor.PRIMARY)
 filename = getcwd()
 
+def cur_babe_date():
+    curdate = str(int(datetime.datetime.now().strftime("%d"))) + '-' + datetime.datetime.now().strftime("%B")
+    conn = sqlite3.connect("data/boob.db")  # или :memory: чтобы сохранить в RAM
+    cursor = conn.cursor()
+    sql = "SELECT name FROM boob where date='%s'" % curdate
+    cursor.execute(sql)
+    c = cursor.fetchall()
+    return c
+
+def happy_birthday(c):
+    searc=str(random.choice(c))
+    send_photo(bot_api, 2000000003, *upload_photo(upload, search_reddit('"'+searc+'"'+' nsfw:1', 2000000003, True), True, 'Поздравляем с днем рождения:'))
+    print('"'+searc+'"'+' nsfw:1')
+
 def vk_msg_send(vk, peer_id, text, attachment):
     vk.messages.send(
         random_id=get_random_id(),
@@ -45,7 +60,7 @@ def vk_msg_send(vk, peer_id, text, attachment):
         message=text
     )
 
-import requests
+
 
 def detect_public_ip(vk, peer_id):
     try:
@@ -101,13 +116,15 @@ def reddit_photos(subreddit_name,peer_id):  # получаем список с  
     return adress_list
 
 
-def search_reddit(name):  # функция поиска на выходе список из 3-х эл-ов название поста url ссылка
+
+
+def search_reddit(name, peer_id, birthday=False):  # функция поиска на выходе список из 3-х эл-ов название поста url ссылка
     adress_list = []
     i = 10
     while i != 0:
         for submission in reddit.subreddit("all").search(name, sort='top', limit=i,  params={'include_over_18': 'on'}):
             if is_image(submission.url):
-                if blacklist(submission.url):
+                if blacklist(submission.url, peer_id):
                     adress_list.append([submission.url, submission.title, submission.permalink])
                     i = 0
                     break
@@ -119,12 +136,16 @@ def search_reddit(name):  # функция поиска на выходе спи
             print(adress_list)
             return adress_list
         else:
-            return [['https://i.imgur.com/0uJilpc.jpg', '404', '404']]
-
+            if birthday is True:
+                print('bithfay')
+                happy_birthday(cur_babe_date())
+                break
+            else:
+                return [['https://i.imgur.com/0uJilpc.jpg', '404', '404']]
 
 def upload_photo(upload,
                  adress_list,
-                 save,msgtext):  # загружает фото в оперативную память (адрес и название берется рандомно из списка)
+                 save,msgtext=''):  # загружает фото в оперативную память (адрес и название берется рандомно из списка)
 
     url, title, link = adress_list[0]
     img = requests.get(url).content

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from pydub import AudioSegment
-import datetime
+
 import speech_recognition as sr
 
 from botmodules import *
@@ -70,20 +70,20 @@ while True:
 
                     elif event.type == VkBotEventType.MESSAGE_NEW and ('booba' in search_list):
                         send_photo(bot_api, event.obj.peer_id,
-                                   *upload_photo(upload, search_reddit('Italian Girl' + ' nsfw:1'), True,''))
+                                   *upload_photo(upload, search_reddit('Italian Girl' + ' nsfw:1', event.obj.peer_id), True,''))
                         tier(event.obj.peer_id,event.object.from_id, search_list[-1])
 
-                    elif event.type == VkBotEventType.MESSAGE_NEW and 'search18' in search_list:
-                        print(search_list[9:])
-                        send_photo(bot_api, event.obj.peer_id,
-                                   *upload_photo(upload, search_reddit(search_list[9:] + ' nsfw:1'), True,''))
-                        tier(event.obj.peer_id,event.object.from_id, search_list[-1])
+
 
                     elif event.type == VkBotEventType.MESSAGE_NEW and 'search' in search_list:
                         send_photo(bot_api, event.obj.peer_id,
-                                   *upload_photo(upload, search_reddit(search_list[7:] + ' nsfw:0'), True,''))
+                                   *upload_photo(upload, search_reddit(search_list[1] + ' nsfw:0', event.obj.peer_id), True))
                         tier(event.obj.peer_id,event.object.from_id, search_list[-1])
 
+                    elif event.type == VkBotEventType.MESSAGE_NEW and 'search18' in search_list:
+                        send_photo(bot_api, event.obj.peer_id,
+                                   *upload_photo(upload, search_reddit(search_list[1] + ' nsfw:1', event.obj.peer_id), True))
+                        tier(event.obj.peer_id,event.object.from_id, search_list[-1])
             except Exception as err:
                 print(err)
                 with open(filename + '/data/log_bot.txt', "a") as f:
