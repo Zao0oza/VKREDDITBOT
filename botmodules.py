@@ -43,12 +43,12 @@ def cur_babe_date():
     cursor = conn.cursor()
     sql = "SELECT name FROM boob where date='%s'" % curdate
     cursor.execute(sql)
-    c = cursor.fetchall()
-    return c
+    babe_list = cursor.fetchall()
+    return babe_list
 
-def happy_birthday(c):
-    searc=str(random.choice(c))
-    send_photo(bot_api, 2000000003, *upload_photo(upload, search_reddit('"'+searc+'"'+' nsfw:1', 2000000003, True), True, 'Поздравляем с днем рождения:'))
+def happy_birthday(babe_list):
+    searc=str(random.choice(babe_list))
+    send_photo(bot_api, 2000000001, *upload_photo(upload, search_reddit('"'+searc+'"'+' nsfw:1', 2000000001, True), True, 'Поздравляем с днем рождения:'))
     print('"'+searc+'"'+' nsfw:1')
 
 def vk_msg_send(vk, peer_id, text, attachment):
