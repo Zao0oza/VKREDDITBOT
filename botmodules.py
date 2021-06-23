@@ -48,7 +48,7 @@ def cur_babe_date():
 
 def happy_birthday(babe_list):
     searc=str(random.choice(babe_list))
-    send_photo(bot_api, 2000000001, *upload_photo(upload, search_reddit('"'+searc+'"'+' nsfw:1', 2000000001, True), True, 'Поздравляем с днем рождения:'))
+    send_photo(bot_api, 2000000001, *upload_photo(upload, search_reddit('"'+str(searc)+'"'+' nsfw:1', 2000000001, True), True, 'Поздравляем с днем рождения:' + searc[0][1:]))
     print('"'+searc+'"'+' nsfw:1')
 
 def vk_msg_send(vk, peer_id, text, attachment):
@@ -85,13 +85,16 @@ def books(vk, peer_id, bookname):
 def is_image(url):  # проверяет является ли ссылка изображением
     for i in ['jpg', 'img', 'png']:
         if i[-3:] in url[-3:]:
-            return True
+            if url[8:13] != 'pixho':
+                return True
+            else:
+                print(1)
 
 
-def blacklist(url,peer_id):  # проверяет была ли уже такая ссылка
-  
+def blacklist(url, peer_id):  # проверяет была ли уже такая ссылка
+
     url_list = load_database(peer_id)
-    
+
     if url[9:] not in str(url_list):
         return True
     else:
@@ -103,16 +106,16 @@ def reddit_photos(subreddit_name,peer_id):  # получаем список с  
     i = 10
     while i != 0:
         for submission in reddit.subreddit(subreddit_name).hot(limit=i):
-            print(submission.url)
+
             if is_image(submission.url):
+
                 if blacklist(submission.url,peer_id):
                     adress_list.append([submission.url, submission.title, submission.permalink])
-                    i = 0
+                    return adress_list
                     break
-                else:
-                    i += 10
-            else:
-                i += 10
+        i+=10
+        print(i)
+
     return adress_list
 
 
@@ -127,7 +130,7 @@ def search_reddit(name, peer_id, birthday=False):  # функция поиска
                 if blacklist(submission.url, peer_id):
                     adress_list.append([submission.url, submission.title, submission.permalink])
                     i = 0
-                    break
+
                 else:
                     i += 10
             else:
@@ -150,16 +153,14 @@ def upload_photo(upload,
     url, title, link = adress_list[0]
     img = requests.get(url).content
     f = BytesIO(img)
-    try:
-        response = upload.photo_messages(f)[0]
-    except:
-        img = requests.get(url).content
-        f = BytesIO(img)
-        response = upload.photo_messages(f)[0]
+
+    print(url)
+    response = upload.photo_messages(f)[0]
     owner_id = response['owner_id']
     photo_id = response['id']
     access_key = response['access_key']
     return owner_id, photo_id, access_key, title, url, link, save, msgtext
+
 
 
 def send_photo(vk, peer_id, owner_id, photo_id, access_key, title, url, link, save,msgtext):
