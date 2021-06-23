@@ -87,7 +87,7 @@ def is_image(url):  # проверяет является ли ссылка из
         if i[-3:] in url[-3:]:
             if url[8:13] != 'pixho':
                 return True
-            else:
+
 
 
 
