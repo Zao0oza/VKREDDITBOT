@@ -88,7 +88,7 @@ def is_image(url):  # проверяет является ли ссылка из
             if url[8:13] != 'pixho':
                 return True
             else:
-                print(1)
+
 
 
 def blacklist(url, peer_id):  # проверяет была ли уже такая ссылка
