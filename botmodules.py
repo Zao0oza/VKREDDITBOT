@@ -1,3 +1,4 @@
+
 from vk_api.utils import get_random_id
 import time
 import re
@@ -20,38 +21,37 @@ with open(filename+'/settings.yaml', encoding='utf-8') as f:
 with open(filename+'/tokens.yaml', encoding='utf-8') as f:
     tokens = yaml.safe_load(f)
 
+
+'''
+настраиваем api для работы c Reddit
+'''
 reddit = praw.Reddit(
     client_id=tokens['reddit_client_id'],
     client_secret=tokens['reddit_client_secret'],
     user_agent=tokens['reddit_user_agent']
 )
+
+'''
+настраиваем api для работы c Vk
+'''
 bot_session = vk_api.VkApi(
     token=tokens['tokens'])
 bot_api = bot_session.get_api()
 upload = VkUpload(bot_session)
 longpoll = VkBotLongPoll(bot_session, tokens['group_id'])
+'''
+Загружаем клавиатуру ВК
+'''
 keyboard = VkKeyboard(one_time=False)
 keyboard.add_button(':tits', color=VkKeyboardColor.PRIMARY)
 keyboard.add_button(':бушидо', color=VkKeyboardColor.PRIMARY)
 keyboard.add_button(':сиси', color=VkKeyboardColor.PRIMARY)
 keyboard.add_button(':Hello there', color=VkKeyboardColor.PRIMARY)
+
 filename = getcwd()
 
-def cur_babe_date():
-    curdate = str(int(datetime.datetime.now().strftime("%d"))) + '-' + datetime.datetime.now().strftime("%B")
-    conn = sqlite3.connect("data/boob.db")  # или :memory: чтобы сохранить в RAM
-    cursor = conn.cursor()
-    sql = "SELECT name FROM boob where date='%s'" % curdate
-    cursor.execute(sql)
-    babe_list = cursor.fetchall()
-    return babe_list
 
-def happy_birthday(babe_list):
-    searc=str(random.choice(babe_list))
-    send_photo(bot_api, 2000000001, *upload_photo(upload, search_reddit('"'+str(searc)+'"'+' nsfw:1', 2000000001, True), True, 'Поздравляем с днем рождения:' + searc[0][1:]))
-    print('"'+searc+'"'+' nsfw:1')
-
-def vk_msg_send(vk, peer_id, text, attachment):
+def vk_msg_send(vk, peer_id, text, attachment): # отправляет сообщение
     vk.messages.send(
         random_id=get_random_id(),
         peer_id=peer_id,
@@ -61,37 +61,30 @@ def vk_msg_send(vk, peer_id, text, attachment):
     )
 
 
-
-def detect_public_ip(vk, peer_id):
+def detect_public_ip(vk,
+                     peer_id):  # Для связи с сервером хозяином которого я не явялюсь и на нем периодически меняются порты, возвращает номер порта
     try:
-        # Use a get request for api.duckduckgo.com
         raw = requests.get('https://api.duckduckgo.com/?q=ip&format=json')
-        # load the request as json, look for Answer.
-        # split on spaces, find the 5th index ( as it starts at 0 ), which is the IP address
         answer = raw.json()["Answer"].split()[4]
-    # if there are any connection issues, error out
     except Exception as e:
         return vk_msg_send(vk, peer_id, 'Error: {0}'.format(e), False)
-    # otherwise, return answer
     else:
         vk_msg_send(vk, peer_id, answer, False)
 
-def books(vk, peer_id, bookname):
-    print('bush')
+
+def books(vk, peer_id, bookname):  # выбирает случайную цитату из книги (цитата в виде отдельной строки)
     string = random.choice(list(open(filename + '/data/' + bookname, encoding='utf-8')))
-    vk_msg_send(vk, peer_id, string, False)
+    vk_msg_send(vk, peer_id, string)
 
 
 def is_image(url):  # проверяет является ли ссылка изображением
     for i in ['jpg', 'img', 'png']:
         if i[-3:] in url[-3:]:
-            if url[8:13] != 'pixho':
+            if url[8:13] != 'pixho':# сайт с которого не удается автоматически парсить
                 return True
 
 
-
-
-def blacklist(url, peer_id):  # проверяет была ли уже такая ссылка
+def blacklist(url, peer_id):  # проверяет наличие ссылки в db чтобы не повторяться
 
     url_list = load_database(peer_id)
 
@@ -101,31 +94,26 @@ def blacklist(url, peer_id):  # проверяет была ли уже така
         return False
 
 
-def reddit_photos(subreddit_name,peer_id):  # получаем список с  постами сообщества
+def reddit_photos(subreddit_name, peer_id):  # получаем список с  постами сообщества
     adress_list = []
     i = 10
     while i != 0:
         for submission in reddit.subreddit(subreddit_name).hot(limit=i):
-
             if is_image(submission.url):
-
-                if blacklist(submission.url,peer_id):
+                if blacklist(submission.url, peer_id):
                     adress_list.append([submission.url, submission.title, submission.permalink])
                     return adress_list
                     break
-        i+=10
-        print(i)
-
+        i += 10
     return adress_list
 
 
-
-
-def search_reddit(name, peer_id, birthday=False):  # функция поиска на выходе список из 3-х эл-ов название поста url ссылка
+def search_reddit(name, peer_id,
+                  ):  # функция поиска на выходе список из 3-х эл-ов название поста url ссылка
     adress_list = []
     i = 10
     while i != 0:
-        for submission in reddit.subreddit("all").search(name, sort='top', limit=i,  params={'include_over_18': 'on'}):
+        for submission in reddit.subreddit("all").search(name, sort='top', limit=i, params={'include_over_18': 'on'}):
             if is_image(submission.url):
                 if blacklist(submission.url, peer_id):
                     adress_list.append([submission.url, submission.title, submission.permalink])
@@ -136,25 +124,16 @@ def search_reddit(name, peer_id, birthday=False):  # функция поиска
             else:
                 i += 10
         if adress_list is not None and adress_list != []:
-            print(adress_list)
             return adress_list
-        else:
-            if birthday is True:
-                print('bithfay')
-                happy_birthday(cur_babe_date())
-                break
-            else:
-                return [['https://i.imgur.com/0uJilpc.jpg', '404', '404']]
+
 
 def upload_photo(upload,
                  adress_list,
-                 save,msgtext=''):  # загружает фото в оперативную память (адрес и название берется рандомно из списка)
+                 save, msgtext=''):  # загружает фото в оперативную память (адрес и название берется рандомно из списка)
 
     url, title, link = adress_list[0]
     img = requests.get(url).content
     f = BytesIO(img)
-
-    print(url)
     response = upload.photo_messages(f)[0]
     owner_id = response['owner_id']
     photo_id = response['id']
@@ -162,18 +141,17 @@ def upload_photo(upload,
     return owner_id, photo_id, access_key, title, url, link, save, msgtext
 
 
-
-def send_photo(vk, peer_id, owner_id, photo_id, access_key, title, url, link, save,msgtext):
-    write_to_cheklist(url[9:],peer_id)
-  # отправляет фото  в вк
+def send_photo(vk, peer_id, owner_id, photo_id, access_key, title, url, link, save, msgtext):
+    write_to_cheklist(url[9:], peer_id)
+    # отправляет фото  в вк
     attachment = f'photo{owner_id}_{photo_id}_{access_key}'
-    text =msgtext+'\n' + str(title) + '\n' + 'https://www.reddit.com/' + str(link)
+    text = msgtext + '\n' + str(title) + '\n' + 'https://www.reddit.com/' + str(link)
     vk_msg_send(vk, peer_id, text, attachment)
     if save is True:
         save_photo(url, title)
 
 
-def save_photo(url, title):
+def save_photo(url, title):# сохраняет фотографию
     p = requests.get(url)
     out = open(filename + '/img/' + str(time.time()) + '-' + re.sub(r'[^aA-zZ]+', '', title) + url[-4::],
                "wb")
@@ -182,22 +160,21 @@ def save_photo(url, title):
 
 
 def write_to_cheklist(image, peer_id):  # записывает рандомно генерированные номера в txt
-    conn = sqlite3.connect(filename + "/data/data.db")  # или :memory: чтобы сохранить в RAM
+    conn = sqlite3.connect(filename + "/data/data.db")
     cursor = conn.cursor()
-    cursor.execute('INSERT INTO blacklist (id,name) VALUES (?, ?)', (peer_id, image)) 
+    cursor.execute('INSERT INTO blacklist (id,name) VALUES (?, ?)', (peer_id, image))
     conn.commit()
 
 
-def load_database (peer_id):
-    
-    conn = sqlite3.connect(filename + "/data/data.db")  # или :memory: чтобы сохранить в RAM
+def load_database(peer_id): # загружает черный список из db
+    conn = sqlite3.connect(filename + "/data/data.db")
     cursor = conn.cursor()
-    sql = "SELECT name FROM blacklist where id ='%s'"% peer_id
+    sql = "SELECT name FROM blacklist where id ='%s'" % peer_id
     cursor.execute(sql)
-    c=cursor.fetchall()
+    c = cursor.fetchall()
     return c
 
 
-def tier(peer, id, search):
+def tier(peer, id, search): # сохраняет id пользователя и запрос
     with open(filename + '/data/tier.txt', "a") as f:
         f.write(str(peer) + ';' + str(id) + ';' + search + '\n')

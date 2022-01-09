@@ -3,6 +3,9 @@ from botmodules import *
 
 import argparse
 
+'''
+Натройки рассылки необходимо указать id группы   и дополнительно возможно текст сообщения
+'''
 parser = argparse.ArgumentParser(description='настройки рассылки')
 parser.add_argument('--msg', type=str, help='текст сообщения', default='Вечер в хату')
 parser.add_argument('--peer', type=str, help='id группы', default='2000000003')
@@ -17,13 +20,12 @@ if not path.exists(filename + 'data/'):
 with open(filename + '/data/log_bot.txt', "a") as f:
     f.write(str(datetime.datetime.now()) + '\n')
 
+
 def main():
     rnd = random.choice(settings['dictionary']['feed'])
-    send_photo(bot_api, args.peer, *upload_photo(upload, reddit_photos(str(rnd),args.peer), True, args.msg))
+    send_photo(bot_api, args.peer, *upload_photo(upload, reddit_photos(str(rnd), args.peer), True, args.msg))
     print('send')
+
 
 if __name__ == '__main__':
     main()
-
-
-
