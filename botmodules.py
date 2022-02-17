@@ -41,11 +41,11 @@ upload = VkUpload(bot_session)
 longpoll = VkBotLongPoll(bot_session, tokens['group_id'])
 '''
 Загружаем клавиатуру ВК
-'''
+
 keyboard = VkKeyboard(one_time=False)
-keyboard.add_button(':tits', color=VkKeyboardColor.PRIMARY)
-keyboard.add_button(':бушидо', color=VkKeyboardColor.PRIMARY)
-keyboard.add_button(':сиси', color=VkKeyboardColor.PRIMARY)
+keyboard.add_button(':JoJoMemes', color=VkKeyboardColor.PRIMARY)
+keyboard.add_button(':general kenobi', color=VkKeyboardColor.PRIMARY)
+keyboard.add_button(':science', color=VkKeyboardColor.PRIMARY)
 keyboard.add_button(':Hello there', color=VkKeyboardColor.PRIMARY)
 
 filename = getcwd()
